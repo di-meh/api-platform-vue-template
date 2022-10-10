@@ -27,6 +27,14 @@ services:
     environment:
       API_PLATFORM_CREATE_CLIENT_ENTRYPOINT: http://caddy
       API_PLATFORM_CREATE_CLIENT_OUTPUT: .
+  
+  front:
+    build:
+      context: ./front
+      target: development-stage
+    volumes:
+      - ./front:/srv/app
+      
 
   caddy:
     volumes:

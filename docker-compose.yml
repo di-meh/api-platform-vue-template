@@ -29,6 +29,11 @@ services:
       target: prod
     environment:
       NEXT_PUBLIC_ENTRYPOINT: http://caddy
+  
+  front:
+    build:
+      context: ./front
+      target: production-stage
 
   caddy:
     build:
