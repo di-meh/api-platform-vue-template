@@ -23,19 +23,12 @@ services:
       MERCURE_PUBLIC_URL: https://${SERVER_NAME:-localhost}/.well-known/mercure
       MERCURE_JWT_SECRET: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
 
-  pwa:
+  front:
     build:
-      context: ./pwa
+      context: ./front
       target: prod
     environment:
-      NEXT_PUBLIC_ENTRYPOINT: http://caddy
-#  
-#  front:
-#    build:
-#      context: ./front
-#      target: prod
-#    environment:
-#      VITE_PUBLIC_ENTRYPOINT: http://caddy
+      VITE_PUBLIC_ENTRYPOINT: http://caddy
 
   caddy:
     build:
@@ -43,9 +36,9 @@ services:
       target: app_caddy
     depends_on:
       - php
-      - pwa
+      - front
     environment:
-      PWA_UPSTREAM: pwa:3000
+      PWA_UPSTREAM: front:3000
       SERVER_NAME: ${SERVER_NAME:-localhost}, caddy:80
       MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
       MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}

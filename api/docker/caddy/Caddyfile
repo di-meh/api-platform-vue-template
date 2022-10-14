@@ -10,13 +10,12 @@ log
 # Matches requests for HTML documents, for static files and for Next.js files,
 # except for known API paths and paths with extensions handled by API Platform
 @pwa expression `(
-        header({'Accept': '*text/html*'})
-        && !path(
+        !path(
             '/docs*', '/graphql*', '/bundles*', '/contexts*', '/_profiler*', '/_wdt*',
             '*.json*', '*.html', '*.csv', '*.yml', '*.yaml', '*.xml'
         )
     )
-    || path('/favicon.ico', '/manifest.json', '/robots.txt', '/_next*', '/sitemap*')`
+    || path('/favicon.ico', '/manifest.json', '/robots.txt', '/sitemap*')`
 
 route {
     root * /srv/app/public

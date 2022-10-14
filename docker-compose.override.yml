@@ -18,25 +18,16 @@ services:
       # Ensure that host.docker.internal is correctly defined on Linux
       - host.docker.internal:host-gateway
 
-  pwa:
+  front:
     build:
-      context: ./pwa
-      target: dev 
+      context: ./front
+      target: dev
     volumes:
-      - ./pwa:/srv/app
+      - ./front:/srv/app
+      - /srv/app/node_modules
     environment:
       API_PLATFORM_CREATE_CLIENT_ENTRYPOINT: http://caddy
       API_PLATFORM_CREATE_CLIENT_OUTPUT: .
-#  
-#  front:
-#    build:
-#      context: ./front
-#      target: dev
-#    volumes:
-#      - ./front:/srv/app
-#    environment:
-#      API_PLATFORM_CREATE_CLIENT_ENTRYPOINT: http://caddy
-#      API_PLATFORM_CREATE_CLIENT_OUTPUT: .
 
   caddy:
     volumes:
