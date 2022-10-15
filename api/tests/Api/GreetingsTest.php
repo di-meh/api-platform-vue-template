@@ -8,7 +8,7 @@ class GreetingsTest extends ApiTestCase
 {
     public function testCreateGreeting(): void
     {
-        static::createClient()->request('POST', '/greetings', ['json' => [
+        static::createClient()->request('POST', '/api/greetings', ['json' => [
             'name' => 'Kévin',
         ]]);
 
