@@ -28,7 +28,7 @@ services:
       context: ./front
       target: prod
     environment:
-      VITE_PUBLIC_ENTRYPOINT: http://caddy
+      VITE_PUBLIC_ENTRYPOINT: http://caddy/api
 
   caddy:
     build:

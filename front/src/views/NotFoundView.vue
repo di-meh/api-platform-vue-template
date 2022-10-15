@@ -1,5 +1,5 @@
 <template>
     <main>
-        <h1>Voici la page principale.</h1>
+        <h1>Not Found</h1>
     </main>
 </template>

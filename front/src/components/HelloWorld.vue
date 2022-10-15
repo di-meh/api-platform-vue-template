@@ -19,7 +19,7 @@ defineProps({
             > +
             <a href="https://api-platform.com/" target="_blank" rel="noopener" class="hover:underline text-cyan-300"
             >API Platform</a
-            >.
+            >
         </h3>
     </div>
 </template>

@@ -6,7 +6,7 @@ docker compose build
 
 # Update deps
 docker compose run php composer update
-docker compose run pwa /bin/sh -c 'pnpm install; pnpm update'
+docker compose run front /bin/sh -c 'npm i; npm up'
 
 # Update the Symfony skeleton
 cd api
