@@ -14,7 +14,7 @@ class GreetingsTest extends ApiTestCase
 
         $this->assertResponseStatusCodeSame(201);
         $this->assertJsonContains([
-            '@context' => '/contexts/Greeting',
+            '@context' => '/api/contexts/Greeting',
             '@type' => 'Greeting',
             'name' => 'Kévin',
         ]);
