@@ -10,13 +10,13 @@ class UserFixtures extends Fixture {
     public function load(ObjectManager $manager): void {
         $admin = new User();
         $admin->setEmail('admin@example.com');
-        $admin->setPassword('$2y$13$.uXrIuqBP3B9QmxrSWD0D.OirD8A/4/F1RtkjlOLYIRlzbXtKkq7O'); // admin
+        $admin->setPassword('admin'); // admin
         $admin->setRoles(['ROLE_ADMIN']);
         $manager->persist($admin);
 
         $user = new User();
         $user->setEmail('user@example.com');
-        $user->setPassword('$2y$13$boNxQUuLg8br5QWTQy0GOedhRtWb0QVT76/wvklL8m1ntXj7R2ynC'); // user
+        $user->setPassword('user'); // user
         $user->setRoles(['ROLE_USER']);
         $manager->persist($user);
 

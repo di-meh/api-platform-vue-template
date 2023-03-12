@@ -2,6 +2,11 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -9,6 +14,26 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
+#[ApiResource(
+    operations: [
+        new Get(
+            security: 'is_granted("ROLE_ADMIN") or object.owner == user',
+            securityMessage: 'Only admins and the current user can get their own user'
+        ),
+        new Post(
+            security: 'is_granted("ROLE_ADMIN") or is_granted("IS_AUTHENTICATED_FULLY") == false',
+            securityMessage: 'Only admins and not logged in users can create users'
+        ),
+        new Put(
+            security: 'is_granted("ROLE_ADMIN") or object.owner == user',
+            securityMessage: 'Only admins and the current user can update their own user'
+        ),
+        new Delete(
+            security: 'is_granted("ROLE_ADMIN") or object.owner == user',
+            securityMessage: 'Only admins and the current user can delete their own user'
+        )
+    ]
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
