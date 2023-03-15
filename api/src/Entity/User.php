@@ -11,13 +11,14 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ApiResource(
     operations: [
         new Get(
-            security: 'is_granted("ROLE_ADMIN") or object.owner == user',
+            security: 'is_granted("ROLE_ADMIN") or object == user',
             securityMessage: 'Only admins and the current user can get their own user'
         ),
         new Post(
@@ -25,11 +26,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
             securityMessage: 'Only admins and not logged in users can create users'
         ),
         new Put(
-            security: 'is_granted("ROLE_ADMIN") or object.owner == user',
+            security: 'is_granted("ROLE_ADMIN") or object == user',
             securityMessage: 'Only admins and the current user can update their own user'
         ),
         new Delete(
-            security: 'is_granted("ROLE_ADMIN") or object.owner == user',
+            security: 'is_granted("ROLE_ADMIN") or object == user',
             securityMessage: 'Only admins and the current user can delete their own user'
         )
     ]
@@ -42,6 +43,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Assert\NotBlank]
+    #[Assert\Email(message: 'The email "{{ value }}" is not a valid email.')]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -51,7 +54,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Assert\NotBlank]
     private ?string $password = null;
+
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    private ?string $username = null;
 
     public function getId(): ?int
     {
@@ -121,5 +129,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getUsername(): ?string
+    {
+        return $this->username;
+    }
+
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
+
+        return $this;
     }
 }

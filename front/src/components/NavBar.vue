@@ -47,14 +47,8 @@
                 </div>
                 <div
                     class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
+                    v-if="cookies.get('token')"
                 >
-                    <button
-                        type="button"
-                        class="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                    >
-                        <span class="sr-only">View notifications</span>
-                        <BellIcon class="h-6 w-6" aria-hidden="true" />
-                    </button>
 
                     <!-- Profile dropdown -->
                     <Menu as="div" class="relative ml-3">
@@ -98,14 +92,15 @@
                                     >
                                 </MenuItem>
                                 <MenuItem v-slot="{ active }">
-                                    <a
-                                        href="#"
+                                    <button
+                                        @click="userStore.logout()"
                                         :class="[
                                             active ? 'bg-gray-100' : '',
-                                            'block px-4 py-2 text-sm text-gray-700',
+                                            'block w-full text-left px-4 py-2 text-sm text-gray-700',
                                         ]"
-                                        >Sign out</a
                                     >
+                                        Sign out
+                                    </button>
                                 </MenuItem>
                             </MenuItems>
                         </transition>
@@ -151,11 +146,19 @@ import {
     XMarkIcon,
     UserIcon,
 } from "@heroicons/vue/24/outline";
+import { useUserStore } from "@/store/user";
+import { storeToRefs } from "pinia";
+import { toRaw } from "vue";
+import { useCookies } from "@vueuse/integrations/useCookies";
+
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
+const cookies = useCookies();
 
 const navigation = [
-    { name: "Dashboard", href: "#", current: true },
-    { name: "Team", href: "#", current: false },
-    { name: "Projects", href: "#", current: false },
-    { name: "Calendar", href: "#", current: false },
+    // { name: "Dashboard", href: "#", current: true },
+    { name: "Register", href: "/register", current: false },
+    { name: "Login", href: "/login", current: false },
+    // { name: "Calendar", href: "#", current: false },
 ];
 </script>

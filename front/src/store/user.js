@@ -41,6 +41,7 @@ export const useUserStore = defineStore("user", {
       const userToken = await response.json();
       if (userToken.token) {
         cookies.set("token", userToken.token);
+        cookies.set("refreshToken", userToken["refresh_token"]);
         const decoded = jwtDecode(userToken.token);
 
         const response = await fetch(`${ENTRYPOINT}/users/${decoded.id}`, {
@@ -53,7 +54,7 @@ export const useUserStore = defineStore("user", {
         const user = await response.json();
         if (user) {
           this.setUser(user);
-          await router.push("/");
+          await router.replace("/");
         }
       }
       return response;
@@ -61,6 +62,8 @@ export const useUserStore = defineStore("user", {
     async logout() {
       this.setUser(null);
       cookies.remove("token");
+      await router.replace("/login");
+      // TODO : refresh page
     },
   },
 });

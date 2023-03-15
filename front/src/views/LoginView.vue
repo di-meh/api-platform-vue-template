@@ -1,25 +1,14 @@
 <template>
-    <!--
-      This example requires updating your template:
-
-      ```
-      <html class="h-full bg-gray-50">
-      <body class="h-full">
-      ```
-    -->
     <div
         class="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
     >
         <div class="w-full max-w-md space-y-8">
             <div>
-                <h2
-                    class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900"
-                >
+                <h2 class="mt-6 text-center text-3xl font-bold tracking-tight">
                     Sign in to your account
                 </h2>
             </div>
             <form class="mt-8 space-y-6" @submit.prevent="login" method="POST">
-                <input type="hidden" name="remember" value="true" />
                 <div class="-space-y-px rounded-md shadow-sm">
                     <div>
                         <label for="email-address" class="sr-only"
@@ -50,20 +39,6 @@
                 </div>
 
                 <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <input
-                            id="remember-me"
-                            name="remember-me"
-                            type="checkbox"
-                            class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                        />
-                        <label
-                            for="remember-me"
-                            class="ml-2 block text-sm text-gray-900"
-                            >Remember me</label
-                        >
-                    </div>
-
                     <div class="text-sm">
                         <a
                             href="#"
@@ -97,18 +72,21 @@
 <script setup>
 import { LockClosedIcon } from "@heroicons/vue/20/solid";
 import { useUserStore } from "@/store/user";
+import { useToast } from "vue-toastification";
 
 const userStore = useUserStore();
+const toast = useToast();
 
-const login = async (values) => {
+const login = async (event) => {
+    const values = Object.fromEntries(new FormData(event.target));
     const response = await userStore.login(values);
     if (response.ok) {
         console.log(response);
     } else {
         if (response.status === 401) {
-            console.log("Invalid credentials");
+            toast.error("Invalid credentials");
         } else {
-            console.log("Something went wrong");
+            toast.error("Something went wrong. Please try again later.");
         }
     }
 };
