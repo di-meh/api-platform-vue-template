@@ -52,7 +52,7 @@ export const useUserStore = defineStore("user", {
           },
         });
         const user = await response.json();
-        if (user) {
+        if (response.ok && user) {
           this.setUser(user);
           await router.replace("/");
         }
@@ -60,10 +60,61 @@ export const useUserStore = defineStore("user", {
       return response;
     },
     async logout() {
+      if (!cookies.get("token")) {
+        throw new Error("Already logged out");
+      }
       this.setUser(null);
       cookies.remove("token");
-      await router.replace("/login");
-      // TODO : refresh page
+      cookies.remove("refreshToken");
+    },
+    async refreshToken() {
+      const response = await fetch(`${ENTRYPOINT}/token/refresh`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          refresh_token: cookies.get("refreshToken"),
+        }),
+      });
+      const refreshToken = await response.json();
+      if (response.ok && refreshToken.token && refreshToken["refresh_token"]) {
+        cookies.set("token", refreshToken.token);
+        cookies.set("refreshToken", refreshToken["refresh_token"]);
+        const decoded = jwtDecode(refreshToken.token);
+
+        const response = await fetch(`${ENTRYPOINT}/users/${decoded.id}`, {
+          headers: {
+            Authorization: `Bearer ${refreshToken.token}`,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }).catch((err) => {
+          console.error(err);
+        });
+        const user = await response.json();
+        if (response.ok && user) {
+          this.setUser(user);
+        }
+      }
+      return response;
+    },
+    async updateUser(values) {
+      const response = await fetch(`${ENTRYPOINT}/users/${this.user.id}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${cookies.get("token")}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+      const user = await response.json();
+      if (response.ok && user) {
+        this.setUser(user);
+      }
+      return response;
     },
   },
 });

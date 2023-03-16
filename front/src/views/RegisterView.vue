@@ -1,8 +1,6 @@
 <template>
     <div class="flex w-full justify-center items-center h-full">
-        <div
-            class="flex flex-col rounded-2xl shadow-2xl bg-neutral-800/75 py-10 px-16 w-[500px]"
-        >
+        <div class="flex flex-col py-10 px-16 w-[500px]">
             <h2 class="text-3xl font-bold mb-6 text-center">Sign Up</h2>
             <FormKit
                 type="form"
